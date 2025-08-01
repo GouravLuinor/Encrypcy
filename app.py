@@ -28,11 +28,11 @@ with st.sidebar:
     3. Paste the corresponding key into the second text area.
     4. Click the "🔓 Decrypt Text" button.
     5. The original message will be displayed.
-    """)
+    """
     6. Share the link with a friend.
     7. Generate a encrypted message and key & send them.
     8. BEST PART NO ONE WITHOUT THE LINK CAN KNOW YOUR 
-    ABOUT YOUR SECRET CONVERSATION. ENJOY...
+    ABOUT YOUR SECRET CONVERSATION. ENJOY...)
     
 
 # --- CUSTOM CSS FOR A PROFESSIONAL UI ---
