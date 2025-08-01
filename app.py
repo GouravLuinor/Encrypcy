@@ -72,6 +72,12 @@ st.markdown("""
         color: #0077b6 !important;
     }
 
+    /* New CSS to make text area labels bold and black */
+    .stTextArea label {
+        font-weight: 700;
+        color: #000000 !important;
+    }
+
     .stTextArea textarea {
         background-color: #ffffff !important;
         color: #333333 !important;
