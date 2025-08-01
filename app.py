@@ -2,90 +2,87 @@ import streamlit as st
 from cryptography.fernet import Fernet
 import streamlit.components.v1 as components
 
-st.set_page_config(page_title="Encrypt/Decrypt", layout="centered")
+st.set_page_config(page_title="Encrypt / Decrypt", layout="centered", initial_sidebar_state="collapsed")
 
+# -- Custom style for layout --
 st.markdown("""
     <style>
-    textarea {
-        font-size: 16px !important;
-    }
-    .box {
-        background-color: #f5f5f5;
-        padding: 12px;
-        border-radius: 10px;
-        border: 1px solid #ddd;
-        margin-bottom: 8px;
-        font-family: monospace;
-        white-space: pre-wrap;
-        word-wrap: break-word;
-    }
-    .copy-btn {
-        background-color: #008CBA;
-        color: white;
-        padding: 6px 10px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 14px;
-        margin-bottom: 10px;
-    }
+        .box {
+            background-color: #1e1e1e;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #444;
+            margin-bottom: 5px;
+            font-family: monospace;
+            font-size: 15px;
+            color: white;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .copy-btn {
+            background-color: #08d9d6;
+            color: black;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
     </style>
 """, unsafe_allow_html=True)
 
-
-def copy_box(label, value, box_id):
-    st.markdown(f"<div class='box' id='{box_id}'>{value}</div>", unsafe_allow_html=True)
+# -- Copy button component --
+def render_copyable(label: str, text: str, tag_id: str):
     components.html(f"""
-        <button class="copy-btn" onclick="copyToClipboard('{box_id}')">Copy {label}</button>
+        <div class="box" id="{tag_id}">{text}</div>
+        <button class="copy-btn" onclick="copyToClipboard('{tag_id}')">📋 Copy {label}</button>
         <script>
-        function copyToClipboard(id) {{
-            var range = document.createRange();
-            range.selectNode(document.getElementById(id));
-            window.getSelection().removeAllRanges();
-            window.getSelection().addRange(range);
-            try {{
-                document.execCommand('copy');
-                window.getSelection().removeAllRanges();
-                alert('{label} copied!');
-            }} catch(err) {{
-                alert('Copy failed');
+            function copyToClipboard(id) {{
+                const el = document.getElementById(id);
+                if (!navigator.clipboard) {{
+                    alert("Clipboard API not available");
+                    return;
+                }}
+                navigator.clipboard.writeText(el.innerText).then(function() {{
+                    console.log("Copied!");
+                }}, function(err) {{
+                    alert("Failed to copy");
+                }});
             }}
-        }}
         </script>
-    """, height=40)
-
+    """, height=150)
 
 st.title("🔐 GOURAV is CHAD")
+
 tab1, tab2 = st.tabs(["Encrypt", "Decrypt"])
 
-# Encrypt tab
 with tab1:
-    st.subheader("Generate Encrypted Code")
-    user_text = st.text_area("Enter your sentence:", height=150)
+    st.subheader("Encrypt Message")
+    input_text = st.text_area("Enter your sentence:", height=150)
 
     if st.button("Encrypt"):
-        if user_text.strip():
+        if input_text.strip():
             key = Fernet.generate_key()
             fernet = Fernet(key)
-            encrypted = fernet.encrypt(user_text.encode()).decode()
+            encrypted = fernet.encrypt(input_text.encode()).decode()
             st.success("Encryption successful!")
 
-            copy_box("Encrypted Text", encrypted, "encrypted")
-            copy_box("Key", key.decode(), "key")
+            render_copyable("Encrypted Text", encrypted, "enc_text")
+            render_copyable("Key", key.decode(), "key_text")
         else:
-            st.warning("Please enter a valid sentence to encrypt.")
+            st.warning("Please enter a valid sentence.")
 
-# Decrypt tab
 with tab2:
-    st.subheader("Decode Encrypted Code")
-    encrypted_input = st.text_area("Enter encrypted text:", height=150)
-    key_input = st.text_area("Enter the key:", height=100)
+    st.subheader("Decrypt Message")
+    encrypted_input = st.text_area("Encrypted Text", height=150)
+    key_input = st.text_area("Key", height=100)
 
     if st.button("Decrypt"):
         try:
-            fernet = Fernet(key_input.encode())
-            decrypted = fernet.decrypt(encrypted_input.encode()).decode()
+            f = Fernet(key_input.encode())
+            decrypted = f.decrypt(encrypted_input.encode()).decode()
             st.success("Decryption successful!")
-            copy_box("Decrypted Text", decrypted, "decrypted")
+            render_copyable("Decrypted Text", decrypted, "decrypted_text")
         except Exception as e:
-            st.error("Invalid key or ciphertext.")
+            st.error("Invalid key or ciphertext. Please check your inputs.")
