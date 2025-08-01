@@ -9,6 +9,27 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
+# --- INSTRUCTIONS SIDEBAR ---
+# A collapsible sidebar serves as the "sliding window" for instructions.
+with st.sidebar:
+    st.header("App Instructions")
+    st.markdown("""
+    This application allows you to securely encrypt and decrypt text messages using a robust encryption key.
+    
+    **🔒 Encrypt**
+    1. Type or paste your message into the text area. The message must not exceed 40 words.
+    2. Click the "🔐 Encrypt Text" button.
+    3. The encrypted message and a unique key will be generated.
+    4. Copy both the encrypted text and the key. You will need both to decrypt the message.
+    
+    **🔓 Decrypt**
+    1. Go to the "Decrypt" tab.
+    2. Paste the encrypted message into the first text area.
+    3. Paste the corresponding key into the second text area.
+    4. Click the "🔓 Decrypt Text" button.
+    5. The original message will be displayed.
+    """)
+
 # --- CUSTOM CSS FOR A PROFESSIONAL UI ---
 # This CSS is updated for a new light theme with contrasting boxes.
 st.markdown("""
@@ -177,11 +198,16 @@ with tab1:
     input_text = st.text_area(
         "Enter your message:",
         height=140,
-        placeholder="Type the message you want to encrypt securely..."
+        placeholder="Type the message to encrypt (max 40 words)..."
     )
 
     if st.button("🔐 Encrypt Text", key="encrypt_button"):
-        if input_text.strip():
+        # Check for word limit
+        if not input_text.strip():
+            st.warning("⚠️ Please enter some text to encrypt.")
+        elif len(input_text.strip().split()) > 40:
+            st.warning("⚠️ The message must be 40 words or less.")
+        else:
             key = Fernet.generate_key()
             fernet = Fernet(key)
             encrypted = fernet.encrypt(input_text.encode()).decode()
@@ -190,8 +216,6 @@ with tab1:
             
             render_copyable("Encrypted Text", encrypted, "encrypted")
             render_copyable("Encryption Key", key.decode(), "key")
-        else:
-            st.warning("⚠️ Please enter some text to encrypt.")
 
 # --- DECRYPT TAB ---
 with tab2:
