@@ -47,7 +47,7 @@ textarea {
 
 .copy-btn {
     background: linear-gradient(to right, #08d9d6, #00a9b8);
-    color: black;
+    color: white;
     padding: 8px 16px;
     border: none;
     border-radius: 10px;
