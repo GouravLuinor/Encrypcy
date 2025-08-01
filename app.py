@@ -1,57 +1,39 @@
 import streamlit as st
 from cryptography.fernet import Fernet
 import streamlit.components.v1 as components
-import random
 
 st.set_page_config(page_title="Encrypt/Decrypt", layout="centered")
 
-# ---------------- Random Unsplash Background ---------------- #
-background_images = [
-    "https://source.unsplash.com/1600x900/?technology,dark",
-    "https://source.unsplash.com/1600x900/?cyberpunk,neon",
-    "https://source.unsplash.com/1600x900/?matrix,code",
-    "https://source.unsplash.com/1600x900/?circuit,dark",
-    "https://source.unsplash.com/1600x900/?digital,night",
-    "https://source.unsplash.com/1600x900/?ai,pattern"
-]
-selected_bg = random.choice(background_images)
-
 # ----------------- Custom Styles ----------------- #
-st.markdown(f"""
+st.markdown("""
 <style>
-body {{
-    background-image: url("{selected_bg}");
-    background-size: cover;
-    background-attachment: fixed;
-}}
-
-.stApp {{
-    background: rgba(0, 0, 0, 0.8);
+.stApp {
+    background-color: #121212;
     padding: 20px;
-}}
+}
 
-h1, h2, h3, h4, h5 {{
+h1, h2, h3, h4, h5 {
     color: #08d9d6 !important;
-}}
+}
 
-textarea {{
+textarea {
     font-size: 16px !important;
-}}
+}
 
-.output-box {{
-    background-color: #111;
+.output-box {
+    background-color: #1c1c1c;
     padding: 18px;
     border-radius: 12px;
     border: 1px solid #444;
     font-family: monospace;
     font-size: 16px;
-    color: #eee;
+    color: #ffffff;  /* Set to pure white */
     white-space: pre-wrap;
     word-wrap: break-word;
     margin-bottom: 10px;
-}}
+}
 
-.decrypted-box {{
+.decrypted-box {
     background-color: #222;
     padding: 22px;
     border-radius: 12px;
@@ -61,9 +43,9 @@ textarea {{
     text-align: center;
     margin-bottom: 10px;
     border: 1px solid #444;
-}}
+}
 
-.copy-btn {{
+.copy-btn {
     background: linear-gradient(to right, #08d9d6, #00a9b8);
     color: black;
     padding: 8px 16px;
@@ -74,30 +56,30 @@ textarea {{
     font-weight: 600;
     transition: transform 0.2s ease, background 0.3s ease;
     margin-bottom: 20px;
-}}
+}
 
-.copy-btn:hover {{
+.copy-btn:hover {
     transform: scale(1.05);
     background: linear-gradient(to right, #00a9b8, #08d9d6);
-}}
+}
 
-.fade-msg {{
+.fade-msg {
     color: #12ffb0;
     font-size: 14px;
     animation: fadeout 2s ease-out forwards;
     margin-top: 8px;
     font-weight: 500;
-}}
+}
 
-@keyframes fadeout {{
-    0%   {{ opacity: 1; }}
-    80%  {{ opacity: 1; }}
-    100% {{ opacity: 0; }}
-}}
+@keyframes fadeout {
+    0%   { opacity: 1; }
+    80%  { opacity: 1; }
+    100% { opacity: 0; }
+}
 </style>
 """, unsafe_allow_html=True)
 
-# ----------------- Copy to Clipboard Component ----------------- #
+# ----------------- Copy Component ----------------- #
 def render_copyable(label: str, value: str, box_id: str):
     components.html(f"""
         <div class="output-box" id="{box_id}">{value}</div>
