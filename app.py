@@ -196,9 +196,10 @@ def render_copyable(label: str, value: str, box_id: str):
             }}
         </script>
     """, height=180)
+    
     def render_decrypted_box(text: str):
-    """Renders the decrypted text in a custom styled box."""
-    st.markdown(f"""<div class="decrypted-box">{text}</div>""", unsafe_allow_html=True)
+        """Renders the decrypted text in a custom styled box."""
+        st.markdown(f"""<div class="decrypted-box">{text}</div>""", unsafe_allow_html=True)
 
 # --- UI LAYOUT ---
 st.title("🔐 GOURAV is CHAD ; )")
