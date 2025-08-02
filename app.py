@@ -248,7 +248,9 @@ with tab2:
                 f = Fernet(key_input.encode())
                 decrypted = f.decrypt(encrypted_input.encode()).decode()
 
+
                 st.success("✅ Decryption successful!")
+                st.markdown(f"""<div class="decrypted-box">{decrypted}</div>""", unsafe_allow_html=True)
                 render_copyable("Decrypted Text", decrypted, "decrypted-copy")
 
             else:
