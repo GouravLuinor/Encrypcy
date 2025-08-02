@@ -196,10 +196,7 @@ def render_copyable(label: str, value: str, box_id: str):
             }}
         </script>
     """, height=180)
-    
-    def render_decrypted_box(text: str):
-        """Renders the decrypted text in a custom styled box."""
-        st.markdown(f"""<div class="decrypted-box">{text}</div>""", unsafe_allow_html=True)
+
 
 # --- UI LAYOUT ---
 st.title("🔐 GOURAV is CHAD ; )")
@@ -253,7 +250,7 @@ with tab2:
 
                 st.success("✅ Decryption successful!")
                 
-                render_decrypted_box(decrypted)
+                st.markdown(f"""<div class="decrypted-box">{decrypted}</div>""", unsafe_allow_html=True)
                 render_copyable("Decrypted Text", decrypted, "decrypted-copy")
             else:
                 st.warning("⚠️ Please provide both the encrypted text and the key to decrypt.")
