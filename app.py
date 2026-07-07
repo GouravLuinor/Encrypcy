@@ -1,6 +1,7 @@
 import streamlit as st
 from cryptography.fernet import Fernet
 import streamlit.components.v1 as components
+import html
 
 # --- PAGE CONFIGURATION ---
 st.set_page_config(
@@ -28,10 +29,10 @@ with st.sidebar:
     3. Paste the corresponding key into the second text area.
     4. Click the "🔓 Decrypt Text" button.
     5. The original message will be displayed.
-    6. Share the link with a friend.
-    7. Generate a encrypted message and key & send them.
-    8. BEST PART NO ONE WITHOUT THE APP LINK CAN KNOW
-       ABOUT YOUR SECRET CONVERSATION. ENJOY...""")
+    **Important**
+    - The encrypted text can only be decrypted with the corresponding key.
+    - Share encryption keys through a separate trusted channel when possible.
+    - Anyone who obtains both the encrypted text and its key can decrypt the message.""")
     
 
 # --- CUSTOM CSS FOR A PROFESSIONAL UI ---
@@ -174,9 +175,10 @@ st.markdown("""
 
 # --- COPY UTILITY FUNCTION ---
 def render_copyable(label: str, value: str, box_id: str):
-    """Renders a text box with a copy button using Streamlit components."""
+    """Render escaped text with a copy button using Streamlit components."""
+    safe_value = html.escape(value)
     components.html(f"""
-        <div class="output-box" id="{box_id}">{value}</div>
+        <div class="output-box" id="{box_id}">{safe_value}</div>
         <button class="copy-btn" onclick="copyToClipboard('{box_id}', '{box_id}-msg')">📋 Copy {label}</button>
         <div id="{box_id}-msg" class="fade-msg" style="display:none;">✅ Copied!</div>
         <script>
@@ -199,7 +201,7 @@ def render_copyable(label: str, value: str, box_id: str):
 
 
 # --- UI LAYOUT ---
-st.title("🔐 GOURAV is CHAD ; )")
+st.title("🔐 Encrypcy")
 
 tab1, tab2 = st.tabs(["🔒 Encrypt", "🔓 Decrypt"])
 
@@ -250,7 +252,11 @@ with tab2:
 
 
                 st.success("✅ Decryption successful!")
-                st.markdown(f"""<div class="decrypted-box">{decrypted}</div>""", unsafe_allow_html=True)
+                safe_decrypted = html.escape(decrypted)
+                st.markdown(
+                    f"""<div class="decrypted-box">{safe_decrypted}</div>""",
+                    unsafe_allow_html=True,
+                )
                 render_copyable("Decrypted Text", decrypted, "decrypted-copy")
 
             else:
